@@ -1,44 +1,141 @@
 [
     {
-        "id": "d38d414e.dd593",
+        "id": "d93b3184.7ed7b",
         "type": "tab",
-        "label": "Práctica 2",
+        "label": "Práctica 3",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "ccb65b.7a11e9a8",
+        "id": "39c46dac.35a932",
         "type": "http response",
-        "z": "d38d414e.dd593",
+        "z": "d93b3184.7ed7b",
         "name": "Ok",
         "statusCode": "200",
         "headers": {},
-        "x": 310,
-        "y": 120,
+        "x": 290,
+        "y": 100,
         "wires": []
     },
     {
-        "id": "e718f922.723ea8",
+        "id": "104c2f6.440f9d1",
+        "type": "function",
+        "z": "d93b3184.7ed7b",
+        "name": "Mensaje encendido",
+        "func": "msg.payload = {Status: 1};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 250,
+        "y": 180,
+        "wires": [
+            [
+                "320cdfd8.686df"
+            ]
+        ]
+    },
+    {
+        "id": "da55b27d.d3c16",
+        "type": "function",
+        "z": "d93b3184.7ed7b",
+        "name": "Mensaje apagado",
+        "func": "msg.payload = {Status: 0};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 250,
+        "y": 220,
+        "wires": [
+            [
+                "320cdfd8.686df"
+            ]
+        ]
+    },
+    {
+        "id": "29b0ea9.8fb5e16",
+        "type": "http response",
+        "z": "d93b3184.7ed7b",
+        "name": "Mensaje de vuelta",
+        "statusCode": "",
+        "headers": {},
+        "x": 670,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "32647aeb.c24e36",
         "type": "http in",
-        "z": "d38d414e.dd593",
+        "z": "d93b3184.7ed7b",
         "name": "Entrada HTTP",
         "url": "/temp",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 110,
-        "y": 120,
+        "x": 90,
+        "y": 100,
         "wires": [
             [
-                "5600320.23136d",
-                "ccb65b.7a11e9a8"
+                "39c46dac.35a932",
+                "dcbe742.32ff288"
             ]
         ]
     },
     {
-        "id": "5600320.23136d",
+        "id": "1942bc35.067fa4",
+        "type": "http in",
+        "z": "d93b3184.7ed7b",
+        "name": "Encendido",
+        "url": "/on",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 80,
+        "y": 180,
+        "wires": [
+            [
+                "104c2f6.440f9d1"
+            ]
+        ]
+    },
+    {
+        "id": "3c1ee52.cab841a",
+        "type": "http in",
+        "z": "d93b3184.7ed7b",
+        "name": "Apagado",
+        "url": "/off",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 80,
+        "y": 220,
+        "wires": [
+            [
+                "da55b27d.d3c16"
+            ]
+        ]
+    },
+    {
+        "id": "320cdfd8.686df",
+        "type": "http request",
+        "z": "d93b3184.7ed7b",
+        "name": "Envía comando HTTP",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": true,
+        "url": "172.20.10.2:1880/status",
+        "tls": "",
+        "proxy": "",
+        "authType": "basic",
+        "x": 460,
+        "y": 200,
+        "wires": [
+            [
+                "29b0ea9.8fb5e16"
+            ]
+        ]
+    },
+    {
+        "id": "dcbe742.32ff288",
         "type": "debug",
-        "z": "d38d414e.dd593",
+        "z": "d93b3184.7ed7b",
         "name": "Lectura de datos",
         "active": true,
         "tosidebar": true,
@@ -46,8 +143,8 @@
         "tostatus": false,
         "complete": "payload",
         "targetType": "msg",
-        "x": 350,
-        "y": 80,
+        "x": 330,
+        "y": 60,
         "wires": []
     }
 ]
