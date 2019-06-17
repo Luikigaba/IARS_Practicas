@@ -1,0 +1,207 @@
+[
+    {
+        "id": "f564f30.7ca6f1",
+        "type": "tab",
+        "label": "Práctica 5",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a54291cf.7f9bc",
+        "type": "http in",
+        "z": "f564f30.7ca6f1",
+        "name": "Entrada HTTP",
+        "url": "/temp",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 120,
+        "wires": [
+            [
+                "42ef3c08.7d20b4",
+                "1c266f01.b32691",
+                "91ff1c66.8b515",
+                "14874a2d.a365b6"
+            ]
+        ]
+    },
+    {
+        "id": "42ef3c08.7d20b4",
+        "type": "http response",
+        "z": "f564f30.7ca6f1",
+        "name": "Ok",
+        "statusCode": "200",
+        "headers": {},
+        "x": 110,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "9d8152f4.bb98a",
+        "type": "http in",
+        "z": "f564f30.7ca6f1",
+        "name": "Encendido",
+        "url": "/on",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 80,
+        "y": 180,
+        "wires": [
+            [
+                "3aec6e35.8a3c62"
+            ]
+        ]
+    },
+    {
+        "id": "bd0fb8c5.066388",
+        "type": "http in",
+        "z": "f564f30.7ca6f1",
+        "name": "Apagado",
+        "url": "/off",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 80,
+        "y": 220,
+        "wires": [
+            [
+                "47eac92b.478688"
+            ]
+        ]
+    },
+    {
+        "id": "3aec6e35.8a3c62",
+        "type": "function",
+        "z": "f564f30.7ca6f1",
+        "name": "Mensaje encendido",
+        "func": "msg.payload = {Status: 1};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 250,
+        "y": 180,
+        "wires": [
+            [
+                "e84176df.5d8628"
+            ]
+        ]
+    },
+    {
+        "id": "e84176df.5d8628",
+        "type": "http request",
+        "z": "f564f30.7ca6f1",
+        "name": "Envía comando HTTP",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": true,
+        "url": "172.20.10.2:1880/status",
+        "tls": "",
+        "proxy": "",
+        "authType": "basic",
+        "x": 460,
+        "y": 200,
+        "wires": [
+            [
+                "a3a82618.63f428"
+            ]
+        ]
+    },
+    {
+        "id": "47eac92b.478688",
+        "type": "function",
+        "z": "f564f30.7ca6f1",
+        "name": "Mensaje apagado",
+        "func": "msg.payload = {Status: 0};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 250,
+        "y": 220,
+        "wires": [
+            [
+                "e84176df.5d8628"
+            ]
+        ]
+    },
+    {
+        "id": "a3a82618.63f428",
+        "type": "http response",
+        "z": "f564f30.7ca6f1",
+        "name": "Mensaje de vuelta",
+        "statusCode": "",
+        "headers": {},
+        "x": 670,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "3fe9a1b8.168f6e",
+        "type": "sqlite",
+        "z": "f564f30.7ca6f1",
+        "mydb": "255444cf.6747ec",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "",
+        "x": 440,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1c266f01.b32691",
+        "type": "function",
+        "z": "f564f30.7ca6f1",
+        "name": "Query DDBB",
+        "func": "// Creación de query\nvar query = 'INSERT INTO sensor_data (reading_id,timestamp,value,units,sensor_id)'+\n            'VALUES ('+msg.payload['reading_Id']+\",'\"+msg.payload['Timestamp']+\"',\"+\n            msg.payload['Temperature']+\",'\"+msg.payload['Units']+\"',\"+\n            msg.payload['Sensor_Id']+');'\n\n// Guardado de query\nmsg.topic = query\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 290,
+        "y": 60,
+        "wires": [
+            [
+                "3fe9a1b8.168f6e"
+            ]
+        ]
+    },
+    {
+        "id": "91ff1c66.8b515",
+        "type": "http request",
+        "z": "f564f30.7ca6f1",
+        "name": "ThingSpeak",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "https://api.thingspeak.com/update.blank?api_key=3K0V7ARV7MWVX0E0&field1={{payload.Temperature}}&created_at={{payload.Timestamp}}",
+        "tls": "",
+        "proxy": "",
+        "authType": "basic",
+        "x": 330,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "14874a2d.a365b6",
+        "type": "debug",
+        "z": "f564f30.7ca6f1",
+        "name": "Lectura de datos",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 310,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "255444cf.6747ec",
+        "type": "sqlitedb",
+        "z": "",
+        "db": "IARS.db",
+        "mode": "RWC"
+    }
+]
