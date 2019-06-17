@@ -1,0 +1,71 @@
+[
+    {
+        "id": "3326788f.1a48a8",
+        "type": "tab",
+        "label": "Práctica_1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "b39024ad.2f13a8",
+        "type": "inject",
+        "z": "3326788f.1a48a8",
+        "name": "Inyección cíclica",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "f349b6dd.b71398"
+            ]
+        ]
+    },
+    {
+        "id": "f349b6dd.b71398",
+        "type": "function",
+        "z": "3326788f.1a48a8",
+        "name": "Generador de temperatura",
+        "func": "// Genera el número aleatorio\nvar random_temp = Math.random() * (40-25)+25;\n\n// Guarda el dato en el mensaje\nmsg.payload = {Temperatura: random_temp};\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 100,
+        "wires": [
+            [
+                "a0193aca.891bd8"
+            ]
+        ]
+    },
+    {
+        "id": "a0193aca.891bd8",
+        "type": "serial out",
+        "z": "3326788f.1a48a8",
+        "name": "Salida por puerto serie",
+        "serial": "deefaed1.49da2",
+        "x": 640,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "deefaed1.49da2",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyUSB0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    }
+]
