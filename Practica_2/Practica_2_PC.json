@@ -1,0 +1,53 @@
+[
+    {
+        "id": "d38d414e.dd593",
+        "type": "tab",
+        "label": "Práctica 2",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ccb65b.7a11e9a8",
+        "type": "http response",
+        "z": "d38d414e.dd593",
+        "name": "Ok",
+        "statusCode": "200",
+        "headers": {},
+        "x": 310,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "e718f922.723ea8",
+        "type": "http in",
+        "z": "d38d414e.dd593",
+        "name": "Entrada HTTP",
+        "url": "/temp",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "5600320.23136d",
+                "ccb65b.7a11e9a8"
+            ]
+        ]
+    },
+    {
+        "id": "5600320.23136d",
+        "type": "debug",
+        "z": "d38d414e.dd593",
+        "name": "Lectura de datos",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    }
+]
