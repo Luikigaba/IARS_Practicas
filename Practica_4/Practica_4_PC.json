@@ -1,0 +1,188 @@
+[
+    {
+        "id": "3c094fdc.69ae2",
+        "type": "tab",
+        "label": "Practica 4",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "f5c66d34.af001",
+        "type": "http in",
+        "z": "3c094fdc.69ae2",
+        "name": "Entrada HTTP",
+        "url": "/temp",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 100,
+        "wires": [
+            [
+                "1a289790.6bbd88",
+                "25da50b1.d9839",
+                "96e1fb60.740958"
+            ]
+        ]
+    },
+    {
+        "id": "1a289790.6bbd88",
+        "type": "http response",
+        "z": "3c094fdc.69ae2",
+        "name": "Ok",
+        "statusCode": "200",
+        "headers": {},
+        "x": 290,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "46d69d53.294994",
+        "type": "http in",
+        "z": "3c094fdc.69ae2",
+        "name": "Encendido",
+        "url": "/on",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 80,
+        "y": 160,
+        "wires": [
+            [
+                "c324af06.d0a07"
+            ]
+        ]
+    },
+    {
+        "id": "360f870e.8a1b88",
+        "type": "http in",
+        "z": "3c094fdc.69ae2",
+        "name": "Apagado",
+        "url": "/off",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 80,
+        "y": 200,
+        "wires": [
+            [
+                "d617881d.8509a8"
+            ]
+        ]
+    },
+    {
+        "id": "c324af06.d0a07",
+        "type": "function",
+        "z": "3c094fdc.69ae2",
+        "name": "Mensaje encendido",
+        "func": "msg.payload = {Status: 1};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 250,
+        "y": 160,
+        "wires": [
+            [
+                "1b9edbde.4f7404"
+            ]
+        ]
+    },
+    {
+        "id": "1b9edbde.4f7404",
+        "type": "http request",
+        "z": "3c094fdc.69ae2",
+        "name": "Envía comando HTTP",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": true,
+        "url": "172.20.10.2:1880/status",
+        "tls": "",
+        "proxy": "",
+        "authType": "basic",
+        "x": 460,
+        "y": 180,
+        "wires": [
+            [
+                "62a5198.409eee8"
+            ]
+        ]
+    },
+    {
+        "id": "d617881d.8509a8",
+        "type": "function",
+        "z": "3c094fdc.69ae2",
+        "name": "Mensaje apagado",
+        "func": "msg.payload = {Status: 0};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 250,
+        "y": 200,
+        "wires": [
+            [
+                "1b9edbde.4f7404"
+            ]
+        ]
+    },
+    {
+        "id": "62a5198.409eee8",
+        "type": "http response",
+        "z": "3c094fdc.69ae2",
+        "name": "Mensaje de vuelta",
+        "statusCode": "",
+        "headers": {},
+        "x": 670,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "f54080a9.71061",
+        "type": "sqlite",
+        "z": "3c094fdc.69ae2",
+        "mydb": "255444cf.6747ec",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "",
+        "x": 520,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "25da50b1.d9839",
+        "type": "function",
+        "z": "3c094fdc.69ae2",
+        "name": "Query DDBB",
+        "func": "// Creación de query\nvar query = 'INSERT INTO sensor_data (reading_id,timestamp,value,units,sensor_id)'+\n            'VALUES ('+msg.payload['reading_Id']+\",'\"+msg.payload['Timestamp']+\"',\"+\n            msg.payload['Temperature']+\",'\"+msg.payload['Units']+\"',\"+\n            msg.payload['Sensor_Id']+');'\n\n// Guardado de query\nmsg.topic = query\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 310,
+        "y": 60,
+        "wires": [
+            [
+                "f54080a9.71061"
+            ]
+        ]
+    },
+    {
+        "id": "96e1fb60.740958",
+        "type": "debug",
+        "z": "3c094fdc.69ae2",
+        "name": "Lectura de datos",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 330,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "255444cf.6747ec",
+        "type": "sqlitedb",
+        "z": "",
+        "db": "IARS.db",
+        "mode": "RWC"
+    }
+]
