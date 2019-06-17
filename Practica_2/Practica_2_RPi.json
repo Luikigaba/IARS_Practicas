@@ -1,0 +1,108 @@
+[
+    {
+        "id": "70f755fe.6a743c",
+        "type": "tab",
+        "label": "Práctica_2",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "e5d113bc.26802",
+        "type": "inject",
+        "z": "70f755fe.6a743c",
+        "name": "Inyección cíclica",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "4fc8687f.a63dc8"
+            ]
+        ]
+    },
+    {
+        "id": "4fc8687f.a63dc8",
+        "type": "function",
+        "z": "70f755fe.6a743c",
+        "name": "Generador de temperatura",
+        "func": "// Carga la variable de flujo Temperatura\nvar temp = flow.get('Temperatura');\n// Aumenta el contador de la temperatura\ntemp += 0.5;\n// Actualiza la variable de flujo\nflow.set('Temperatura', temp);\n\n// Guarda el dato en el mensaje\nmsg.payload = {Temperatura: temp,\n                Timestamp: msg.payload\n};\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 60,
+        "wires": [
+            [
+                "3d98ba52.cd6466"
+            ]
+        ]
+    },
+    {
+        "id": "4f32a48b.19af3c",
+        "type": "inject",
+        "z": "70f755fe.6a743c",
+        "name": "Inicialización",
+        "topic": "",
+        "payload": "Start",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "d4738a92.176798"
+            ]
+        ]
+    },
+    {
+        "id": "d4738a92.176798",
+        "type": "change",
+        "z": "70f755fe.6a743c",
+        "name": "Inic. Temperatura",
+        "rules": [
+            {
+                "t": "set",
+                "p": "Temperatura",
+                "pt": "flow",
+                "to": "25",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3d98ba52.cd6466",
+        "type": "http request",
+        "z": "70f755fe.6a743c",
+        "name": "Envía el dato por HTTP",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": true,
+        "url": "172.20.10.3:1880/temp",
+        "tls": "",
+        "proxy": "",
+        "authType": "basic",
+        "x": 650,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    }
+]
