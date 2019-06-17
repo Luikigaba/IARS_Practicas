@@ -1,0 +1,218 @@
+[
+    {
+        "id": "97e997e6.9c98d8",
+        "type": "tab",
+        "label": "Práctica 3",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "8c209bad.94e128",
+        "type": "function",
+        "z": "97e997e6.9c98d8",
+        "name": "Interruptor transmisión",
+        "func": "var status = flow.get('st');\nvar status_pay = msg.payload['Status'];\n\nif (status=='1' & status_pay=='1'){\n    msg.payload['Resp'] = 'Ya estaba encendido';\n} else if (status=='1' & status_pay=='0'){\n    msg.payload['Resp'] = 'Se ha apagado';\n    msg.payload['Status'] = '0';\n} else if (status=='0' & status_pay=='0'){\n    msg.payload['Resp'] = 'Ya estaba apagado';\n} else if (status=='0' & status_pay=='1'){\n    msg.payload['Resp'] = 'Se ha encendido';\n    msg.payload['Status'] = '1';\n}\nreturn msg;\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 300,
+        "y": 200,
+        "wires": [
+            [
+                "202488bb.614b98"
+            ]
+        ]
+    },
+    {
+        "id": "202488bb.614b98",
+        "type": "change",
+        "z": "97e997e6.9c98d8",
+        "name": "Modifica variables",
+        "rules": [
+            {
+                "t": "set",
+                "p": "st",
+                "pt": "flow",
+                "to": "payload['Status']",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload['Resp']",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 510,
+        "y": 200,
+        "wires": [
+            [
+                "83468b86.4eca48"
+            ]
+        ]
+    },
+    {
+        "id": "83468b86.4eca48",
+        "type": "http response",
+        "z": "97e997e6.9c98d8",
+        "name": "Ok",
+        "statusCode": "200",
+        "headers": {},
+        "x": 690,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e40c8539.a67448",
+        "type": "inject",
+        "z": "97e997e6.9c98d8",
+        "name": "Inyección cíclica",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "f7f6d9eb.c03138"
+            ]
+        ]
+    },
+    {
+        "id": "f7f6d9eb.c03138",
+        "type": "function",
+        "z": "97e997e6.9c98d8",
+        "name": "Generador de temperatura",
+        "func": "// Carga la variable de flujo Temperatura\nvar temp = flow.get('Temperatura');\n// Aumenta el contador de la temperatura\ntemp += 0.5;\n// Actualiza la variable de flujo\nflow.set('Temperatura', temp);\n\n// Guarda el dato en el mensaje\nmsg.payload = {Temperatura: temp,\n                Timestamp: msg.payload\n};\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 60,
+        "wires": [
+            [
+                "654fd6cb.02d658"
+            ]
+        ]
+    },
+    {
+        "id": "db080c8a.3181",
+        "type": "inject",
+        "z": "97e997e6.9c98d8",
+        "name": "Inicialización",
+        "topic": "",
+        "payload": "Start",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "44d249ed.00b368"
+            ]
+        ]
+    },
+    {
+        "id": "44d249ed.00b368",
+        "type": "change",
+        "z": "97e997e6.9c98d8",
+        "name": "Inic. Temperatura",
+        "rules": [
+            {
+                "t": "set",
+                "p": "Temperatura",
+                "pt": "flow",
+                "to": "25",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "st",
+                "pt": "flow",
+                "to": "'1'",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "654fd6cb.02d658",
+        "type": "switch",
+        "z": "97e997e6.9c98d8",
+        "name": "",
+        "property": "st",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 570,
+        "y": 60,
+        "wires": [
+            [
+                "d48213d5.44863"
+            ]
+        ]
+    },
+    {
+        "id": "e1339557.a26408",
+        "type": "http in",
+        "z": "97e997e6.9c98d8",
+        "name": "Obtiene comando",
+        "url": "/status",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 200,
+        "wires": [
+            [
+                "8c209bad.94e128"
+            ]
+        ]
+    },
+    {
+        "id": "d48213d5.44863",
+        "type": "http request",
+        "z": "97e997e6.9c98d8",
+        "name": "Envía el dato por HTTP",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": true,
+        "url": "172.20.10.3:1880/temp",
+        "tls": "",
+        "proxy": "",
+        "authType": "basic",
+        "x": 750,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    }
+]
